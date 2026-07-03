@@ -1,0 +1,14 @@
+# UI Framework
+customtkinter>=5.2.0
+
+# Network Metrics & Scanning
+psutil>=5.9.0
+scapy>=2.5.0
+
+# Visualisations
+matplotlib>=3.7.0
+
+# Speed Testing
+# Note: speedtest-cli has known API deprecation issues with some servers.
+# We will use it as a starting point or implement programmatic fallback HTTP requests.
+speedtest-cli>=2.1.3
