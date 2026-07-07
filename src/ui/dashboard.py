@@ -213,6 +213,11 @@ class NetworkAnalyzerApp(ctk.CTk):
         self.lbl_up = ctk.CTkLabel(self.val_panel, text="Upload Speed: -- Mbps", font=ctk.CTkFont(size=14))
         self.lbl_up.pack(pady=10)
 
+
+        # ADD: Create an indeterminate progress bar (keep it hidden initially)
+        self.speed_progress = ctk.CTkProgressBar(self.speed_frame, width=300)
+        self.speed_progress.configure(mode="indeterminate")
+
         # Trigger
         self.btn_run_speed = ctk.CTkButton(
             self.speed_frame, 
@@ -302,6 +307,7 @@ class NetworkAnalyzerApp(ctk.CTk):
         # Save loop scheduling handles for cleanup on exit
         self.metrics_after_id = self.after(1000, self.update_live_metrics)
 
+    # MODIFY: Shows and runs the progress bar when the test starts
     def dispatch_speed_worker(self):
         """
         Description: Spawns non-blocking thread to fetch remote CDN speed test metrics.
@@ -314,6 +320,10 @@ class NetworkAnalyzerApp(ctk.CTk):
         self.lbl_ping.configure(text="Ping Latency: Evaluating...")
         self.lbl_down.configure(text="Download Speed: Evaluating...")
         self.lbl_up.configure(text="Upload Speed: Evaluating...")
+
+        # ADD: Display and start progress animation
+        self.speed_progress.pack(pady=10)
+        self.speed_progress.start()
 
         # Worker target definition
         def worker():
@@ -346,6 +356,7 @@ class NetworkAnalyzerApp(ctk.CTk):
 
         threading.Thread(target=worker, daemon=True).start()
 
+    # MODIFY: Updated to handle speed progress bar toggling and detailed scanner parsing
     def observe_background_workers(self):
         """
         Description: Non-blocking scheduler matching active queue payloads. Runs safely inside
@@ -358,6 +369,11 @@ class NetworkAnalyzerApp(ctk.CTk):
         try:
             results = self.speedtest_queue.get_nowait()
             self.btn_run_speed.configure(state="normal", text="Execute Bandwidth Test")
+            
+            # ADD: Stop and hide progress animation
+            self.speed_progress.stop()
+            self.speed_progress.pack_forget()
+
             if results:
                 self.lbl_ping.configure(text=f"Ping Latency: {results['ping_ms']} ms")
                 self.lbl_down.configure(text=f"Download Speed: {results['download_mbps']} Mbps")
@@ -370,16 +386,26 @@ class NetworkAnalyzerApp(ctk.CTk):
             pass
 
         try:
+            # MODIFY: Refactored parser to parse IP, MAC, Vendor, and Category details
             devices = self.scanner_queue.get_nowait()
             self.btn_run_scan.configure(state="normal", text="Scan Subnet")
             self.txt_devices.delete("0.0", "end")
             
-            self.txt_devices.insert("0.0", f"Discovered Devices ({len(devices)} online):\n")
+            self.txt_devices.insert("0.0", f"Discovered Devices ({len(devices)} online):\n\n")
             for device in devices:
                 marker = ""
-                if self.network_config and device == self.network_config["ip"]:
+                if self.network_config and device["ip"] == self.network_config["ip"]:
                     marker = " (Host Machine)"
-                self.txt_devices.insert("end", f"  - {device}{marker}\n")
+                
+                # Write a cleanly formatted visual profile of each active device
+                self.txt_devices.insert(
+                    "end", 
+                    f"  IP: {device['ip']:<15}{marker}\n"
+                    f"  MAC Address:  {device['mac']}\n"
+                    f"  Manufacturer: {device['vendor']}\n"
+                    f"  Device Type:  {device['device_type']}\n"
+                    f"  --------------------------------------------------\n"
+                )
         except queue.Empty:
             pass
 

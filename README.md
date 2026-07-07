@@ -46,6 +46,7 @@ venv_win\Scripts\activate
 :: Install and run
 pip install -r requirements.txt
 python main.py
+```
 
 ### 2. Windows Double-Click Launcher (run.bat)
 When working inside a cross-platform repository, your project directory may physically reside inside your WSL filesystem (accessible in Windows via a network share path \\wsl.localhost\Ubuntu\...).
@@ -79,9 +80,17 @@ source .venv/bin/activate
 :: Install and run
 pip install -r requirements.txt
 python3 main.py
+```
 
 ### Change Log & Project Timeline
 Development followed a strict iterative pattern, verifying backend socket routing capabilities via a Command Line Interface (CLI) harness before implementing any GUI wrappers.
+
+### [1.2.0] - 2026-07-08
+- **Added:** Offline OUI (Organizationally Unique Identifier) vendor resolution engine (`src/network/oui_resolver.py`) supporting dynamic hardware categorization.
+- **Added:** Mathematical detection of locally-administered, randomized private MAC addresses used by mobile operating systems for tracking privacy.
+- **Added:** Real-time host loopback/physical interface MAC resolution using native `psutil` adapter querying.
+- **Added:** Visual progress feedback in the Bandwidth Test panel using an indeterminate `ctk.CTkProgressBar` on background threads.
+- **Fixed:** Standardized `CTkFont` weight configurations to bold throughout UI panels.
 
 ## [1.1.0] - 2026-07-03 (Current Release)
 - Added: Integrated a dual-mode run.bat double-click script utilizing pushd/popd drive mappings to execute Windows Python natively from files inside the WSL filesystem.
@@ -104,8 +113,8 @@ Development followed a strict iterative pattern, verifying backend socket routin
 
 ### Current Project Relevant File Tree:
 
+```text
 wifi-analyzer/
-│
 ├── .gitignore               # Ignores virtual environments, caches, and system metadata
 ├── README.md                # The comprehensive release documentation we just wrote
 ├── requirements.txt         # System dependencies
@@ -131,3 +140,4 @@ wifi-analyzer/
 │
 └── concepts_and_drafts/     # Sandbox environment for historical code or trial snippets
     └── README.md            # Explanation of this folder's purpose
+```
