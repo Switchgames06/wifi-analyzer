@@ -85,14 +85,14 @@ python3 main.py
 ### Change Log & Project Timeline
 Development followed a strict iterative pattern, verifying backend socket routing capabilities via a Command Line Interface (CLI) harness before implementing any GUI wrappers.
 
-### [1.2.0] - 2026-07-08
+### [1.2.0] - 2026-07-08 (Current Release)
 - **Added:** Offline OUI (Organizationally Unique Identifier) vendor resolution engine (`src/network/oui_resolver.py`) supporting dynamic hardware categorization.
 - **Added:** Mathematical detection of locally-administered, randomized private MAC addresses used by mobile operating systems for tracking privacy.
 - **Added:** Real-time host loopback/physical interface MAC resolution using native `psutil` adapter querying.
 - **Added:** Visual progress feedback in the Bandwidth Test panel using an indeterminate `ctk.CTkProgressBar` on background threads.
 - **Fixed:** Standardized `CTkFont` weight configurations to bold throughout UI panels.
 
-## [1.1.0] - 2026-07-03 (Current Release)
+## [1.1.0] - 2026-07-03 
 - Added: Integrated a dual-mode run.bat double-click script utilizing pushd/popd drive mappings to execute Windows Python natively from files inside the WSL filesystem.
 - Fixed: Reformulated the Matplotlib telemetry chart x-axis to display a positive, rolling timeline window of 1 to 30 seconds (replacing negative offsets).
 - Fixed: Addressed a CustomTkinter layout crash by standardizing font weight declarations to standard supported types ("bold").
